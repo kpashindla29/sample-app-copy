@@ -11,7 +11,7 @@ pipeline {
         stage('compile') {
 	   steps {
                 echo 'compiling..'
-		git url: 'https://github.com/kpashindla29/samplejavaapp-devops'
+		git url: 'https://github.com/kpashindla29/sample-app-copy'
 		bat label: '', script: 'mvn compile'
            }
         }
@@ -60,10 +60,10 @@ pipeline {
         }
     stage('push docker image') {
 	      steps {
-                      	sh script: 'cd  $WORKSPACE'
-			sh script: 'docker build --file Dockerfile --tag docker.io/kpashindla/mysampleapp:$BUILD_NUMBER .'
+                      	sh script: 'cd $WORKSPACE'
+			sh script: 'docker build --file Dockerfile --tag docker.io/blakemack/mysampleapp:$BUILD_NUMBER .'
                         sh script: 'docker login -u $DOCKER_CREDS_USR -p $DOCKER_CREDS_PSW'
-		        sh script: 'docker push docker.io/kpashindla/mysampleapp:$BUILD_NUMBER'
+		        sh script: 'docker push docker.io/blakemack/mysampleapp:$BUILD_NUMBER'
 		    }
       }
 
