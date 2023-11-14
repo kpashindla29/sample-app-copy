@@ -58,14 +58,30 @@ pipeline {
 		bat label: '', script: 'mvn package'	
            }		
         }
-    stage('push docker image') {
-	      steps {
-                      	sh script: 'cd $WORKSPACE'
-			sh script: 'docker build --file Dockerfile --tag docker.io/blakemack/mysampleapp:$BUILD_NUMBER .'
-                        sh script: 'docker login -u $DOCKER_CREDS_USR -p $DOCKER_CREDS_PSW'
-		        sh script: 'docker push docker.io/blakemack/mysampleapp:$BUILD_NUMBER'
-		    }
-      }
+stage('push docker image') {
+    steps {
+        script {
+            // Change directory to $WORKSPACE
+            sh '''
+                cd $WORKSPACE
+            '''
+
+            // Build Docker image
+            sh '''
+                docker build --file Dockerfile --tag docker.io/blakemack/mysampleapp:$BUILD_NUMBER .
+            '''
+
+            // Docker login and push
+            withCredentials([usernamePassword(credentialsId: 'dfcb01a1-428b-400e-b635-5ba9693a4dab', usernameVariable: 'DOCKER_CREDS_USR', passwordVariable: 'DOCKER_CREDS_PSW')]) {
+                sh '''
+                    docker login -u $DOCKER_CREDS_USR -p $DOCKER_CREDS_PSW
+                    docker push docker.io/blakemack/mysampleapp:$BUILD_NUMBER
+                '''
+            }
+        }
+    }
+}
+
 
     }
 }
