@@ -3,14 +3,14 @@ FROM ubuntu:latest
 LABEL maintainer="Kishore Pashindla <kpashindla@albanybeck.com>"
 
 # Set environment variables
-ENV TOMCAT_VERSION 9.0.80
-ENV CATALINA_HOME /opt/tomcat
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+ENV TOMCAT_VERSION 9.0.82
+ENV CATALINA_HOME /mnt/c/apache-tomcat-9.0.82
+ENV JAVA_HOME /mnt/c/Program Files/Java/jdk-17
 ENV PATH $CATALINA_HOME/bin:$PATH
 
 # Install JDK & wget packages.
 RUN apt-get -y update && apt-get -y upgrade
-RUN apt-get -y install openjdk-11-jdk wget
+RUN apt-get -y install openjdk-17-jdk wget
 
 # Install and configure Tomcat.
 RUN mkdir $CATALINA_HOME
@@ -25,8 +25,7 @@ RUN rm -rf /tmp/apache-tomcat-${TOMCAT_VERSION}
 
 RUN rm -rf /tmp/tomcat.tar.gz
 
-COPY target/sampleapp.war /opt/tomcat/webapps
+COPY target/sampleapp.war C:\apache-tomcat-9.0.82\webapps
 EXPOSE 8080
-#CMD /usr/local/tomcat/bin/catalina.sh run
-CMD ["/opt/tomcat/bin/catalina.sh", "run"]
-#
+#CMD /usr/local/tomcat/bin/catalina.bat run
+CMD ["/mnt/c/apache-tomcat-9.0.82/bin/catalina.sh", "run"]
