@@ -63,14 +63,14 @@ stage('push docker image') {
         script {
             // Build Docker image
             sh '''
-                docker build --file Dockerfile --tag docker.io/blakemack/mysampleapp:$BUILD_NUMBER .
+                docker build -v /mnt/c/apache-tomcat-9.0.82:/usr/local/apache-tomcat-9.0.82 --file Dockerfile --tag docker.io/blakemack/mysampleapp:$BUILD_NUMBER .
             '''
             // Docker login and push
             withCredentials([usernamePassword(credentialsId: 'dfcb01a1-428b-400e-b635-5ba9693a4dab', usernameVariable: 'DOCKER_CREDS_USR', passwordVariable: 'DOCKER_CREDS_PSW')]) {
-                sh '''
-                    docker login -u $DOCKER_CREDS_USR -p $DOCKER_CREDS_PSW
-                    docker push docker.io/blakemack/mysampleapp:$BUILD_NUMBER
-                '''
+            sh '''
+                docker login -u $DOCKER_CREDS_USR -p $DOCKER_CREDS_PSW
+                docker push docker.io/blakemack/mysampleapp:$BUILD_NUMBER
+            '''
             }
         }
     }
