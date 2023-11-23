@@ -63,6 +63,10 @@ pipeline {
 		        sh script: 'docker push docker.io/blakemack/mysampleapp:$BUILD_NUMBER'
 		    }
       }
-           
+	stage('deploy-QA') {
+		 steps {
+		    sh script: 'ansible-playbook --inventory /tmp/myinv $WORKSPACE/deploy/deploy-kube.yml --extra-vars "env=qa build=$BUILD_NUMBER"'
+	   }		
+	}
     }
 }
